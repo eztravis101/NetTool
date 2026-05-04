@@ -1,36 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>NetTool Dashboard</title>
+    <title>NetTool | Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
-        <div class="brand">NETTOOL // <span style="color: white; font-size: 0.9rem;">Network Utility Dashboard</span></div>
+        <div class="brand">NETTOOL // <span style="font-weight: 300; color: white;">OPS_CENTER</span></div>
         <div style="display: flex; align-items: center; gap: 20px;">
-            <span style="color: var(--text-secondary); font-size: 0.9rem;">User: <strong>{{ user }}</strong></span>
-            <a href="{{ url_for('logout') }}"><button class="btn-logout">Logout</button></a>
+            <span style="color: var(--text-secondary); font-size: 0.8rem;">SECURE_SESSION: <strong>{{ user }}</strong></span>
+            <a href="{{ url_for('logout') }}"><button class="btn-logout">TERMINATE</button></a>
         </div>
     </header>
 
-    <div class="main-content">
-        <div class="tool-panel">
-            <h3 style="margin-top: 0;">Diagnostic Utility: ICMP Ping</h3>
-            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
-                Run a connectivity test against a remote host or IP address.
-            </p>
-            
-            <form method="POST" style="display: flex; gap: 10px; align-items: flex-end;">
-                <div class="form-group" style="flex-grow: 1; margin-bottom: 0;">
-                    <label>Enter IP or Hostname</label>
-                    <input type="text" name="target" placeholder="e.g. 8.8.8.8" value="{{ target }}" required>
-                </div>
-                <button type="submit" style="width: 150px;">Run Test</button>
-            </form>
+    <div class="main-content fade-in">
+        <!-- Overview Stats -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <span class="stat-value">{{ history|length }}</span>
+                <span class="stat-label">Session Queries</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" style="color: #4ade80;">ONLINE</span>
+                <span class="stat-label">System Status</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value">0.4ms</span>
+                <span class="stat-label">Avg Latency</span>
+            </div>
+        </div>
 
-            {% if output %}
-            <div class="terminal">{{ output }}</div>
-            {% endif %}
+        <div class="dashboard-grid">
+            <!-- Tool Section -->
+            <div class="tool-panel">
+                <h3>Network Diagnostic</h3>
+                <form method="POST">
+                    <div class="form-group">
+                        <input type="text" name="target" placeholder="Enter IP or Hostname (e.g., google.com)" required>
+                    </div>
+                    <button type="submit">EXECUTE PING</button>
+                </form>
+
+                {% if output %}
+                <div class="terminal">{{ output }}</div>
+                {% endif %}
+            </div>
+
+            <!-- History Sidebar -->
+            <div class="secondary-card">
+                <h4 style="margin-top:0; color: var(--text-secondary);">RECENT ACTIVITY</h4>
+                {% if history %}
+                    {% for entry in history %}
+                    <div class="history-item">
+                        <div>
+                            <div style="font-weight: 600;">{{ entry.target }}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-secondary);">{{ entry.timestamp }}</div>
+                        </div>
+                        <span class="badge {{ 'badge-success' if entry.status == 'Success' else 'badge-fail' }}">
+                            {{ entry.status }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">No recent logs found.</div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </body>
