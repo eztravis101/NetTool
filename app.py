@@ -141,5 +141,11 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
+from flask import send_file
+
+@app.route('/download_logs')
+def download_logs():
+    return send_file("logs.txt", as_attachment=True)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
