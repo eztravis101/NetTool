@@ -1,70 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <title>NetTool | Dashboard</title>
+    <title>NetTool Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
-        <div class="brand">NETTOOL // <span style="font-weight: 300; color: white;">OPS_CENTER</span></div>
+        <div style="font-weight: 800; color: var(--accent);">NETTOOL // OPS</div>
         <div style="display: flex; align-items: center; gap: 20px;">
-            <span style="color: var(--text-secondary); font-size: 0.8rem;">SECURE_SESSION: <strong>{{ user }}</strong></span>
-            <a href="{{ url_for('logout') }}"><button class="btn-logout">TERMINATE</button></a>
+            <span style="font-size: 0.8rem;">USER: {{ user }}</span>
+            <a href="{{ url_for('logout') }}"><button style="width: auto; padding: 5px 15px; font-size: 0.7rem;">LOGOUT</button></a>
         </div>
     </header>
 
-    <div class="main-content fade-in">
-        <!-- Overview Stats -->
-        <div class="stats-container">
-            <div class="stat-card">
-                <span class="stat-value">{{ history|length }}</span>
-                <span class="stat-label">Session Queries</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value" style="color: #4ade80;">ONLINE</span>
-                <span class="stat-label">System Status</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value">0.4ms</span>
-                <span class="stat-label">Avg Latency</span>
-            </div>
-        </div>
-
-        <div class="dashboard-grid">
-            <!-- Tool Section -->
-            <div class="tool-panel">
-                <h3>Network Diagnostic</h3>
+    <div class="dashboard-container">
+        <div class="tool-section">
+            <div class="centered-input-container">
+                <h3>Network Diagnostic Tool</h3>
+                <p style="color: var(--text-secondary); font-size: 0.85rem;">Perform ICMP ping and DNS resolution.</p>
+                
                 <form method="POST">
-                    <div class="form-group">
-                        <input type="text" name="target" placeholder="Enter IP or Hostname (e.g., google.com)" required>
-                    </div>
-                    <button type="submit">EXECUTE PING</button>
+                    <input type="text" name="target" placeholder="Enter Hostname or IP Address" value="{{ target }}" required>
+                    <button type="submit">EXECUTE TEST</button>
                 </form>
 
-                {% if output %}
-                <div class="terminal">{{ output }}</div>
+                {% if dns_info %}
+                <div class="dns-badge">{{ dns_info }}</div>
                 {% endif %}
             </div>
 
-            <!-- History Sidebar -->
-            <div class="secondary-card">
-                <h4 style="margin-top:0; color: var(--text-secondary);">RECENT ACTIVITY</h4>
-                {% if history %}
-                    {% for entry in history %}
-                    <div class="history-item">
-                        <div>
-                            <div style="font-weight: 600;">{{ entry.target }}</div>
-                            <div style="font-size: 0.7rem; color: var(--text-secondary);">{{ entry.timestamp }}</div>
-                        </div>
-                        <span class="badge {{ 'badge-success' if entry.status == 'Success' else 'badge-fail' }}">
-                            {{ entry.status }}
-                        </span>
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="empty-state">No recent logs found.</div>
-                {% endif %}
+            {% if output %}
+            <div class="terminal">{{ output }}</div>
+            {% endif %}
+        </div>
+
+        <div class="history-card" style="background: var(--bg-panel); padding: 1.5rem; border-radius: 12px;">
+            <h4 style="margin-top: 0; font-size: 0.75rem; color: var(--text-secondary);">PROFILE ACTIVITY</h4>
+            {% for entry in history %}
+            <div class="history-item">
+                <span>{{ entry.target }}</span>
+                <span style="color: {{ '#4ade80' if entry.status == 'Success' else '#ef4444' }}">{{ entry.status }}</span>
             </div>
+            {% endfor %}
         </div>
     </div>
 </body>
