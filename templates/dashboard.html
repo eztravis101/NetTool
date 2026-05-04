@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NetTool Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="brand">NETTOOL // <span style="color: white; font-size: 0.9rem;">Network Utility Dashboard</span></div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <span style="color: var(--text-secondary); font-size: 0.9rem;">User: <strong>{{ user }}</strong></span>
+            <a href="{{ url_for('logout') }}"><button class="btn-logout">Logout</button></a>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="tool-panel">
+            <h3 style="margin-top: 0;">Diagnostic Utility: ICMP Ping</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                Run a connectivity test against a remote host or IP address.
+            </p>
+            
+            <form method="POST" style="display: flex; gap: 10px; align-items: flex-end;">
+                <div class="form-group" style="flex-grow: 1; margin-bottom: 0;">
+                    <label>Enter IP or Hostname</label>
+                    <input type="text" name="target" placeholder="e.g. 8.8.8.8" value="{{ target }}" required>
+                </div>
+                <button type="submit" style="width: 150px;">Run Test</button>
+            </form>
+
+            {% if output %}
+            <div class="terminal">{{ output }}</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
