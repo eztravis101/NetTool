@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>NetTool | Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card fade-in">
+            <h2>NetTool <span style="font-weight: 300; color: var(--text-secondary)">Registration</span></h2>
+            <p style="text-align: center; color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1.5rem;">
+                Create a new operator profile for infrastructure access.
+            </p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert" style="color: {{ '#4ade80' if category == 'success' else '#ef4444' }};">
+                      {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <div class="form-group">
+                    <label>Desired Username</label>
+                    <input type="text" name="username" placeholder="e.g. j.smith" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>System Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit">CREATE ACCOUNT</button>
+            </form>
+
+            <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem;">
+                <span style="color: var(--text-secondary);">Already have an account?</span> 
+                <a href="{{ url_for('login') }}" style="color: var(--accent); text-decoration: none; font-weight: 600;">Sign In</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
